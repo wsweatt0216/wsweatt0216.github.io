@@ -36,6 +36,9 @@
   .card{background:#141926;border:1px solid #232a3d;border-radius:14px;padding:22px 24px}
   .card h3{font-size:18px;margin-bottom:8px}
   .card p{color:#9aa5bd;font-size:15.5px}
+  .demo-frame{position:relative;width:100%;aspect-ratio:8/5;border-radius:14px;
+    overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.55)}
+  .demo-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
   .flip{margin:70px 0 0}
   .flip img{width:100%;border-radius:14px;box-shadow:0 30px 80px rgba(0,0,0,.55)}
   footer{margin-top:80px;padding:28px 0 44px;border-top:1px solid #232a3d;
@@ -70,6 +73,11 @@
       <p class="price">$4.99 &middot; Windows 11 &middot; no ads, no accounts, no analytics</p>
     </div>
     <div class="shot"><img src="shot2.png" alt="Snip, name it, and the PDF is already in the folder"></div>
+  </div>
+
+  <h2>Watch it happen</h2>
+  <div class="demo-frame">
+    <iframe src="demo.html" title="Snip to PDF — animated demo" loading="lazy" scrolling="no"></iframe>
   </div>
 
   <h2>Everything lives in your right-click menu</h2>

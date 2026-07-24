@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Snip to PDF — Animated Demo</title>
+<style>
+  :root{ --dur: 18s; --red:#d13438; --blue:#0067c0; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    margin:0;padding:0;overflow:hidden;background:transparent;
+    font-family:"Segoe UI Variable","Segoe UI",system-ui,sans-serif;
+  }
+  .stage{
+    position:absolute;top:0;left:0;width:960px;height:600px;overflow:hidden;
+    transform-origin:top left;
+    background:linear-gradient(150deg,#2a8ae0,#0f4c8a);
+  }
+
+  /* ================= windows ================= */
+  .win{position:absolute;background:#fff;border-radius:9px;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.34)}
+  .doc-win{left:3%;top:11%;width:45%;height:78%}
+  .exp-win{left:52%;top:11%;width:45%;height:78%}
+  .bar{height:32px;background:#fafafa;border-bottom:1px solid #e9e9ed;display:flex;align-items:center;gap:6px;padding:0 12px}
+  .dot{width:9px;height:9px;border-radius:50%}
+  .r{background:#ff5f57}.y{background:#febc2e}.g{background:#28c840}
+  .bar .t{margin-left:8px;font-size:11px;color:#666}
+
+  .page{padding:18px 20px;background:#fff;height:100%}
+  .h1{font-size:14.5px;font-weight:700;color:#1d1d1f;margin-bottom:3px}
+  .h2{font-size:9.5px;color:#8a8a90;margin-bottom:14px}
+  .ln{height:6px;background:#eceef1;border-radius:3px;margin-bottom:7px}
+  .ln.s{width:72%}.ln.m{width:88%}
+  .chart{margin-top:14px;height:108px;display:flex;align-items:flex-end;gap:9px;padding:10px 12px;background:#f7f9fc;border-radius:7px}
+  .col{flex:1;border-radius:3px 3px 0 0}
+  .c1{height:44%;background:#7aa7e0}.c2{height:70%;background:#5b8fd4}
+  .c3{height:52%;background:#7aa7e0}.c4{height:88%;background:#d13438}.c5{height:63%;background:#5b8fd4}
+
+  .files{padding:18px 14px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px 6px}
+  .file{display:grid;justify-items:center;gap:6px}
+  .icon{width:38px;height:48px;border-radius:4px;position:relative;box-shadow:0 2px 5px rgba(0,0,0,.11)}
+  .icon::after{content:"";position:absolute;top:0;right:0;width:12px;height:12px;background:rgba(0,0,0,.11);border-bottom-left-radius:3px}
+  .doc{background:linear-gradient(160deg,#4a7fd4,#2f5fb0)}
+  .xls{background:linear-gradient(160deg,#3f9c6d,#2c7c53)}
+  .txt{background:linear-gradient(160deg,#bcc1ca,#9aa0ab)}
+  .pdf{background:linear-gradient(160deg,#e04b50,#b8272c)}
+  .tag{position:absolute;bottom:5px;left:0;right:0;text-align:center;font-size:7.5px;font-weight:800;color:#fff;letter-spacing:.5px}
+  .nm{font-size:10px;color:#333;text-align:center;line-height:1.2}
+
+  .newfile{opacity:0;transform:scale(.55);animation:pop var(--dur) infinite}
+  @keyframes pop{
+    0%,78%  {opacity:0;transform:scale(.55)}
+    82%     {opacity:1;transform:scale(1.16)}
+    85%     {transform:scale(1)}
+    95%     {opacity:1;transform:scale(1)}
+    98%,100%{opacity:0;transform:scale(.55)}
+  }
+  .newfile .icon{box-shadow:0 0 0 3px rgba(224,75,80,.42),0 8px 20px rgba(224,75,80,.42)}
+
+  /* ============ Windows 11 context menu ============ */
+  .w11{
+    position:absolute;left:54%;top:26%;width:196px;padding:5px;z-index:14;
+    background:#f7f9fc;border:1px solid rgba(0,0,0,.07);border-radius:9px;
+    box-shadow:0 18px 44px rgba(0,0,0,.28);transform-origin:top left;
+    opacity:0;animation:w11 var(--dur) infinite;
+  }
+  @keyframes w11{
+    0%,11%  {opacity:0;transform:scale(.95) translateY(-5px)}
+    13%,36% {opacity:1;transform:scale(1) translateY(0)}
+    38%,100%{opacity:0;transform:scale(.98)}
+  }
+  .mi{display:flex;align-items:center;gap:11px;padding:7px 9px;border-radius:5px;font-size:12.5px;color:#1b1b1b}
+  .mi .gl{width:15px;height:15px;border-radius:3px;background:#c9d3e0;flex:none}
+  .mi .arw{margin-left:auto;font-size:10px;color:#7a7a7a}
+  .sepline{height:1px;background:rgba(0,0,0,.07);margin:4px 6px}
+  /* his entry */
+  .mi.sp .gl{background:#2f6fe0;position:relative}
+  .mi.sp .gl::after{content:"";position:absolute;inset:3px;border:1.6px solid #fff;border-radius:1px;
+    clip-path:polygon(0 0,38% 0,38% 12%,12% 12%,12% 38%,0 38%, 0 0, 100% 0,100% 38%,88% 38%,88% 12%,62% 12%,62% 0,100% 0,100% 100%,62% 100%,62% 88%,88% 88%,88% 62%,100% 62%,100% 100%,0 100%,0 62%,12% 62%,12% 88%,38% 88%,38% 100%,0 100%)}
+  .mi.sp{animation:sphot var(--dur) infinite}
+  @keyframes sphot{0%,19%{background:transparent}21%,36%{background:rgba(0,103,192,.10)}38%,100%{background:transparent}}
+
+  /* ============ his submenu flyout ============ */
+  .sub{
+    position:absolute;left:73.5%;top:41%;width:172px;padding:5px;z-index:15;
+    background:#f7f9fc;border:1px solid rgba(0,0,0,.07);border-radius:9px;
+    box-shadow:0 18px 44px rgba(0,0,0,.28);transform-origin:top left;
+    opacity:0;animation:sub var(--dur) infinite;
+  }
+  @keyframes sub{
+    0%,21%  {opacity:0;transform:scale(.95) translateX(-6px)}
+    23.5%,36%{opacity:1;transform:scale(1) translateX(0)}
+    38%,100%{opacity:0;transform:scale(.98)}
+  }
+  .si{padding:8px 12px;border-radius:5px;font-size:12.5px;color:#1b1b1b}
+  .si.hot{animation:sihot var(--dur) infinite}
+  @keyframes sihot{0%,29%{background:transparent}31%,36%{background:rgba(0,103,192,.13)}38%,100%{background:transparent}}
+
+  /* ============ snip overlay ============ */
+  .dim{position:absolute;inset:0;background:rgba(10,14,24,.45);opacity:0;animation:dim var(--dur) infinite;z-index:10}
+  @keyframes dim{0%,38%{opacity:0}41%,59%{opacity:1}62%,100%{opacity:0}}
+  .sel{position:absolute;left:4.4%;top:17.6%;width:0;height:0;z-index:11;
+    border:2px solid #7dbcff;background:rgba(125,188,255,.12);opacity:0;animation:sel var(--dur) infinite}
+  @keyframes sel{
+    0%,42%  {opacity:0;width:0;height:0}
+    44%     {opacity:1;width:0;height:0}
+    56%     {opacity:1;width:42.5%;height:43.3%}
+    59%     {opacity:1;width:42.5%;height:43.3%}
+    62%,100%{opacity:0;width:42.5%;height:43.3%}
+  }
+  .flash{position:absolute;inset:0;background:#fff;opacity:0;animation:fl var(--dur) infinite;z-index:12}
+  @keyframes fl{0%,58%{opacity:0}59.5%{opacity:.8}62%,100%{opacity:0}}
+
+  /* ============ REAL naming dialog (Win32 style) ============ */
+  .save{
+    position:absolute;left:50%;top:45%;transform:translate(-50%,-50%) scale(.92);
+    width:300px;background:#f0f0f0;border:1px solid #9a9a9a;border-radius:3px;z-index:16;
+    box-shadow:0 26px 60px rgba(0,0,0,.45);opacity:0;animation:save var(--dur) infinite;
+  }
+  @keyframes save{
+    0%,61%  {opacity:0;transform:translate(-50%,-50%) scale(.92)}
+    63.5%,76%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+    78%,100%{opacity:0;transform:translate(-50%,-50%) scale(.98)}
+  }
+  .save .tb{display:flex;align-items:center;padding:10px 12px;background:#f0f0f0;border-bottom:1px solid #dcdcdc}
+  .save .tb h4{font-size:13px;font-weight:600;color:#1b1b1b}
+  .save .tb .x{margin-left:auto;font-size:14px;color:#3a3a3a;line-height:1}
+  .save .bd{padding:12px}
+  .save label{display:block;font-size:12px;color:#1b1b1b;margin-bottom:7px}
+  .inp{border:1px solid #7a7a7a;background:#fff;padding:5px 6px;font-size:12.5px}
+  .inp .selt{background:#0078d7;color:#fff;padding:1px 2px}
+  .btns{display:flex;justify-content:flex-end;gap:9px;margin-top:14px}
+  .btn{font-size:12px;padding:5px 20px;border:1px solid #adadad;background:#fdfdfd;color:#1b1b1b;border-radius:2px}
+  .btn.p{border-color:#0078d7;box-shadow:0 0 0 1px #0078d7 inset}
+
+  /* ============ cursor ============ */
+  .cursor{position:absolute;width:19px;height:19px;left:0;top:0;z-index:22;
+    filter:drop-shadow(0 2px 3px rgba(0,0,0,.5));animation:cur var(--dur) infinite}
+  @keyframes cur{
+    0%   {transform:translate(720px,480px)}
+    10%  {transform:translate(524px,162px)}   /* right-click in folder */
+    13%  {transform:translate(524px,162px)}
+    20%  {transform:translate(576px,302px)}   /* hover "Snip + Paste" */
+    24%  {transform:translate(576px,302px)}
+    30%  {transform:translate(738px,292px)}   /* into submenu: Snip to PDF */
+    37%  {transform:translate(738px,292px)}
+    43%  {transform:translate(40px,104px)}    /* jump to document, drag start */
+    56%  {transform:translate(448px,364px)}   /* drag end */
+    62%  {transform:translate(448px,364px)}
+    70%  {transform:translate(488px,314px)}   /* Save button */
+    77%  {transform:translate(488px,314px)}
+    86%  {transform:translate(620px,268px)}   /* rest by the new PDF */
+    100% {transform:translate(720px,480px)}
+  }
+  .click{position:absolute;width:32px;height:32px;border-radius:50%;border:2px solid rgba(255,255,255,.92);
+    left:-6px;top:-6px;opacity:0;animation:ck var(--dur) infinite}
+  @keyframes ck{
+    0%,9.5%{opacity:0;transform:scale(.3)}
+    10.5%  {opacity:.9;transform:scale(.45)}
+    13%    {opacity:0;transform:scale(1.2)}
+    35.5%  {opacity:0;transform:scale(.3)}
+    36.5%  {opacity:.9;transform:scale(.45)}
+    39%    {opacity:0;transform:scale(1.2)}
+    73.5%  {opacity:0;transform:scale(.3)}
+    74.5%  {opacity:.9;transform:scale(.45)}
+    77%    {opacity:0;transform:scale(1.2)}
+    100%   {opacity:0}
+  }
+
+  /* ============ captions ============ */
+  .cap{position:absolute;left:0;right:0;bottom:8px;text-align:center;z-index:20;
+    font-size:24px;font-weight:700;color:#fff;letter-spacing:-.3px;line-height:1.15;
+    text-shadow:0 3px 20px rgba(0,0,0,.85);opacity:0}
+  .k1{animation:k1 var(--dur) infinite}
+  @keyframes k1{0%,7%{opacity:0}10%,35%{opacity:1}38%,100%{opacity:0}}
+  .k2{animation:k2 var(--dur) infinite}
+  @keyframes k2{0%,43%{opacity:0}46%,58%{opacity:1}61%,100%{opacity:0}}
+  .k3{animation:k3 var(--dur) infinite}
+  @keyframes k3{0%,80%{opacity:0}83%,95%{opacity:1}98%,100%{opacity:0}}
+  .k3 small{display:block;font-size:11.5px;font-weight:600;opacity:.85;margin-top:3px}
+</style>
+</head>
+<body>
+
+<div class="stage">
+
+  <!-- LEFT: what you want to capture -->
+  <div class="win doc-win">
+    <div class="bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="t">Q3 Summary.docx</div></div>
+    <div class="page">
+      <div class="h1">Q3 Performance Summary</div>
+      <div class="h2">Prepared July 2026</div>
+      <div class="ln m"></div><div class="ln"></div><div class="ln s"></div>
+      <div class="chart">
+        <div class="col c1"></div><div class="col c2"></div><div class="col c3"></div><div class="col c4"></div><div class="col c5"></div>
+      </div>
+      <div class="ln m" style="margin-top:14px"></div><div class="ln s"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: the folder it lands in -->
+  <div class="win exp-win">
+    <div class="bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="t">Documents &rsaquo; Project</div></div>
+    <div class="files">
+      <div class="file"><div class="icon doc"><div class="tag">DOCX</div></div><div class="nm">Report.docx</div></div>
+      <div class="file"><div class="icon xls"><div class="tag">XLSX</div></div><div class="nm">Budget.xlsx</div></div>
+      <div class="file"><div class="icon txt"><div class="tag">TXT</div></div><div class="nm">Notes.txt</div></div>
+      <div class="file newfile"><div class="icon pdf"><div class="tag">PDF</div></div><div class="nm">clip 2026-07-23.pdf</div></div>
+    </div>
+  </div>
+
+  <!-- real Windows 11 right-click menu -->
+  <div class="w11">
+    <div class="mi"><div class="gl"></div>View<span class="arw">›</span></div>
+    <div class="mi"><div class="gl"></div>Sort by<span class="arw">›</span></div>
+    <div class="mi"><div class="gl"></div>Refresh</div>
+    <div class="sepline"></div>
+    <div class="mi"><div class="gl"></div>New<span class="arw">›</span></div>
+    <div class="sepline"></div>
+    <div class="mi sp"><div class="gl"></div>Snip + Paste<span class="arw">›</span></div>
+    <div class="mi"><div class="gl"></div>Open in Terminal</div>
+    <div class="sepline"></div>
+    <div class="mi"><div class="gl"></div>Show more options</div>
+  </div>
+
+  <!-- his submenu -->
+  <div class="sub">
+    <div class="si">Snip to Clipboard</div>
+    <div class="si hot">Snip to PDF</div>
+    <div class="si">Snip to PNG</div>
+    <div class="si">Paste as PDF</div>
+    <div class="si">Paste as PNG</div>
+  </div>
+
+  <!-- snip overlay -->
+  <div class="dim"></div>
+  <div class="sel"></div>
+  <div class="flash"></div>
+
+  <!-- REAL naming dialog -->
+  <div class="save">
+    <div class="tb"><h4>Snip to PDF</h4><div class="x">✕</div></div>
+    <div class="bd">
+      <label>File name:</label>
+      <div class="inp"><span class="selt">clip 2026-07-23</span></div>
+      <div class="btns"><div class="btn p">Save</div><div class="btn">Cancel</div></div>
+    </div>
+  </div>
+
+  <!-- captions -->
+  <div class="cap k1">Right-click where you want it.</div>
+  <div class="cap k2">Drag over anything.</div>
+  <div class="cap k3">Done — it's already a PDF.<small>No pasting. No saving. No converting.</small></div>
+
+  <!-- cursor -->
+  <div class="cursor">
+    <svg viewBox="0 0 24 24" width="19" height="19"><path d="M4 2l14 8-6 1.5L14.5 18 11 19 8.5 12 4 15z" fill="#fff" stroke="#111" stroke-width="1.2" stroke-linejoin="round"/></svg>
+    <div class="click"></div>
+  </div>
+
+</div>
+
+<script>
+/* Keeps the 960x600 stage pixel-perfect at any embed size:
+   scales the whole stage uniformly so the absolute-positioned
+   cursor stays aligned with the percentage-positioned menus. */
+(function(){
+  var stage = document.querySelector('.stage');
+  function fit(){
+    var k = Math.min(window.innerWidth / 960, window.innerHeight / 600);
+    stage.style.transform = 'scale(' + k + ')';
+  }
+  window.addEventListener('resize', fit);
+  fit();
+})();
+</script>
+</body>
+</html>
