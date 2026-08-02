@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Snip + Paste – Screenshot to PDF | Savvy-Apps</title>
-<meta name="description" content="Snip any part of your screen straight into the current folder as a PDF or PNG, paste clipboard images as files, and combine PDFs — all from the Windows right-click menu.">
+<meta name="description" content="Snip any part of your screen straight into the current folder as a PDF, combine folders of PDFs and images into one clean searchable document, and compress heavyweight PDFs to email size — all from the Windows right-click menu.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234F46E5'/%3E%3Cstop offset='1' stop-color='%230EA5E9'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='url(%23g)'/%3E%3Cg stroke='%23fff' stroke-width='8' stroke-linecap='round' stroke-linejoin='round' fill='none'%3E%3Cpath d='M26 42 V26 H42'/%3E%3Cpath d='M74 42 V26 H58'/%3E%3Cpath d='M26 58 V74 H42'/%3E%3Cpath d='M74 58 V74 H58'/%3E%3C/g%3E%3C/svg%3E">
 <style>
   *{box-sizing:border-box;margin:0}
@@ -17,19 +17,28 @@
   header .co{font-weight:700;font-size:18px;letter-spacing:.2px}
   .hero{display:flex;align-items:center;gap:56px;padding:44px 0 70px;flex-wrap:wrap}
   .hero-left{flex:1;min-width:320px}
-  .hero svg.big{width:88px;height:88px;border-radius:20px;
-    box-shadow:0 14px 44px rgba(79,70,229,.45);margin-bottom:28px}
   h1{font-size:52px;line-height:1.08;letter-spacing:-1px}
   h1 span{background:linear-gradient(90deg,#7d95ff,#38bdf8);
     -webkit-background-clip:text;background-clip:text;color:transparent}
-  .lede{font-size:21px;color:#9aa5bd;margin:22px 0 34px;max-width:520px}
+  .lede{font-size:20px;color:#9aa5bd;margin:22px 0 34px;max-width:540px}
   .cta{display:inline-block;background:linear-gradient(135deg,#4F46E5,#0EA5E9);
     color:#fff;text-decoration:none;font-weight:600;font-size:19px;
     padding:16px 34px;border-radius:12px;box-shadow:0 10px 34px rgba(59,91,219,.4)}
   .cta:hover{filter:brightness(1.1)}
   .price{color:#9aa5bd;font-size:15px;margin-top:12px}
-  .shot{flex:1;min-width:320px}
-  .shot img{width:100%;border-radius:14px;box-shadow:0 30px 80px rgba(0,0,0,.55)}
+
+  /* the whole app in one glance: the actual menu */
+  .shot{flex:1;min-width:300px;display:flex;justify-content:center}
+  .menu-mock{background:#f7f9fc;border-radius:12px;padding:8px;width:300px;
+    box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.06)}
+  .mm-head{display:flex;align-items:center;gap:10px;padding:10px 12px 8px;
+    color:#5b6472;font-size:12.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+  .mm-head svg{width:18px;height:18px;border-radius:4px}
+  .mm-row{color:#1b1b1b;font-size:16.5px;padding:11px 14px;border-radius:7px;font-weight:500}
+  .mm-row small{display:block;font-size:12.5px;color:#7a8494;font-weight:400;line-height:1.35}
+  .mm-row.hot{background:linear-gradient(135deg,rgba(79,70,229,.12),rgba(14,165,233,.12))}
+  .mm-sep{height:1px;background:rgba(0,0,0,.08);margin:5px 8px}
+
   h2{font-size:15px;letter-spacing:1px;text-transform:uppercase;color:#8a93a6;
     margin:60px 0 22px;font-weight:700}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
@@ -65,19 +74,51 @@
 
   <div class="hero">
     <div class="hero-left">
-      <h1>Screenshot straight to <span>PDF.</span><br>Right-click. Done.</h1>
-      <p class="lede">Snip + Paste puts screenshots exactly where you need them — as real
-      files, in the folder you're already standing in. No paste-into-Paint, no save-as,
-      no converting.</p>
+      <h1>Snip. Paste.<br><span>Combine. Compress.</span></h1>
+      <p class="lede">Screenshots land as real PDFs in the folder you're standing in.
+      A folder of files becomes one clean, searchable document. Heavyweight PDFs
+      shrink to email size — and your originals are never touched. All of it lives
+      in the right-click menu.</p>
       <a class="cta" href="https://apps.microsoft.com/detail/9P2X3D7XPKW5">Get it on the Microsoft Store</a>
       <p class="price">$4.99 &middot; Windows 11 &middot; no ads, no accounts, no analytics</p>
     </div>
-    <div class="shot"><img src="shot2.png" alt="Snip, name it, and the PDF is already in the folder"></div>
+    <div class="shot">
+      <div class="menu-mock" role="img" aria-label="The Snip + Paste right-click menu">
+        <div class="mm-head">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect width="100" height="100" rx="22" fill="url(#g1)"/>
+            <g stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none">
+              <path d="M26 42 V26 H42"/><path d="M74 42 V26 H58"/>
+              <path d="M26 58 V74 H42"/><path d="M74 58 V74 H58"/></g>
+          </svg>
+          Snip + Paste
+        </div>
+        <div class="mm-row hot">Snip to PDF
+          <small>Drag a box, it's already a PDF in this folder</small></div>
+        <div class="mm-row">Paste as PDF
+          <small>Clipboard image straight to a real file</small></div>
+        <div class="mm-sep"></div>
+        <div class="mm-row">Combine Pages&#8230;
+          <small>Click files in order &rarr; one searchable document</small></div>
+        <div class="mm-row">Compress
+          <small>14 MB &rarr; 2.7 MB, originals untouched</small></div>
+      </div>
+    </div>
   </div>
 
-  <h2>Watch it happen</h2>
+  <h2>Watch it happen &mdash; snip anything, it's already a PDF</h2>
   <div class="demo-frame">
     <iframe src="demo.html" title="Snip to PDF — animated demo" loading="lazy" scrolling="no"></iframe>
+  </div>
+
+  <h2>Combine Pages &mdash; click the order, get one clean document</h2>
+  <div class="demo-frame">
+    <iframe src="demo-combine.html" title="Combine Pages — animated demo" loading="lazy" scrolling="no"></iframe>
+  </div>
+
+  <h2>Compress &mdash; 14 MB becomes 2.7, and nothing bounces</h2>
+  <div class="demo-frame">
+    <iframe src="demo-compress.html" title="Compress — animated demo" loading="lazy" scrolling="no"></iframe>
   </div>
 
   <h2>Everything lives in your right-click menu</h2>
@@ -88,10 +129,14 @@
       <p>Same snip, saved as an image file — or sent to your clipboard to paste anywhere, started with your mouse instead of the keyboard.</p></div>
     <div class="card"><h3>Paste as PDF or PNG</h3>
       <p>Already have an image copied? Save it straight into the folder as a real file.</p></div>
-    <div class="card"><h3>Combine into one PDF</h3>
-      <p>Select PDFs and images, right-click, get a single document — in the order shown. No PDF suite required.</p></div>
+    <div class="card"><h3>Combine Pages</h3>
+      <p>Right-click the folder, click files in the order you want the pages, name it. Every page comes out the same size, and snips become searchable text — automatically.</p></div>
+    <div class="card"><h3>Compress</h3>
+      <p>Select the heavy PDFs, right-click, and smaller copies appear beside them. Text pages stay razor sharp, everything stays searchable, and your originals are never modified.</p></div>
+    <div class="card"><h3>Honest by design</h3>
+      <p>If a PDF can't get meaningfully smaller, Compress says so instead of handing you a junk copy. Duplicates get (2) — nothing is ever overwritten.</p></div>
     <div class="card"><h3>Quick name box</h3>
-      <p>Enter keeps the suggested date name. Esc discards. Duplicates get (2) — nothing is ever overwritten.</p></div>
+      <p>Enter keeps the suggested date name. Esc discards. Every save is named before it lands, so folders stay tidy.</p></div>
     <div class="card"><h3>Private by design</h3>
       <p>Runs entirely on your PC. No network access, no accounts, no telemetry. <a href="privacy.html" style="color:#7d95ff">Privacy policy</a>.</p></div>
   </div>
